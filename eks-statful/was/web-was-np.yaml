@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: was-np
+  namespace: back-end
+spec:
+  podSelector: 
+    matchLabels:
+      app: django
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              tier: web #front-end
+        # - namespaceSelector:
+        #     matchLabels:
+        #       tire: was
+        # - podSelector:
+        #     matchLabels:
+        #       app: web
+        # - ipBlock:
+        #     cidr: 192.168.46.202/32
+
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0

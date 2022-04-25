@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: back-end
+spec:
+  serviceName: "mysql-svc"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: gymin97/django:mysql_v1
+        ports:
+        - containerPort: 3306
+          name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD 
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: rootpass # qwer1234
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+                name: mysql-cm
+                key: mysqldb # django_db DB 생성
+        - name: MYSQL_USER
+          valueFrom:
+              secretKeyRef:
+                name: mysql-pass
+                key: username # python DB 계정
+        - name: MYSQL_ROOT_HOST
+          value: 'mysql-svc'
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: userpass # python DB 계정
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

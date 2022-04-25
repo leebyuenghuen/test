@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pingtest2
+  namespace: back-end
+  labels:
+    app: was
+spec:
+  containers:
+  - name: was
+    image: hifrodo/msa:v3
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80

@@ -1,0 +1,5 @@
+# eks 생성
+eksctl.exe create cluster --name aiden103 --region eu-central-1 --with-oidc --ssh-public-key aiden103 --nodes 3 --node-type t3.medium --node-volume-size=20 --managed
+
+# eks 삭제
+eksctl delete cluster --name aiden103
